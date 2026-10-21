@@ -1,0 +1,12 @@
+<!doctype html><meta charset="utf-8"><title>Owl states</title>
+<style>body{margin:0;padding:24px;background:#1b1b1f;color:#eee;font:14px system-ui}h1{font-size:16px;margin:0 0 14px}
+.g{display:grid;grid-template-columns:repeat(4,1fr);gap:26px 18px}.c{text-align:center}.c div.o{margin:0 auto;width:250px;height:250px}.c b{display:block;margin-top:6px;font-weight:600}.c i{opacity:.6;font-style:normal;font-size:12px}</style>
+<h1>All states, frozen mid-animation</h1><div class="g" id="g"></div>
+<script src="../dist/owl-mascot.js"></script>
+<script>
+// [state, time into the state] chosen where each animation is at its most readable
+const AT={idle:0.5,thinking:1.2,wink:0.8,wide:0.9,alert:0.7,notify:0.9,exclaim:0.8,sleep:1.4,hop:0.55,shake:0.6,play:0.9,orbit:1.5,swirl:0.45,burst:0.9,comet:1.1,like:0.7};
+const g=document.getElementById('g');
+OwlMascot.STATES.forEach(d=>{const c=document.createElement('div');c.className='c';const o=document.createElement('div');o.className='o';c.appendChild(o);c.insertAdjacentHTML('beforeend',`<b>${d.id}</b><i>t=${AT[d.id]}s</i>`);g.appendChild(c);
+ OwlMascot.frame(o,d.id,AT[d.id]+0.0,{size:250,life:false});});
+</script>

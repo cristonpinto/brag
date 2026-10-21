@@ -1,0 +1,32 @@
+<!doctype html><meta charset="utf-8"><body class="path-mod-quiz" id="page-mod-quiz-review">
+<div class="popover-region-notifications"><div data-region="count-container">0</div></div>
+<script src="../dist/owl-mascot.js"></script>
+<script>
+const out=[]; const fail=(m)=>out.push('FAIL '+m);
+const E=OwlMascot.Engine;
+// 1. every state, sampled over time: finite numbers, slots well-formed
+OwlMascot.STATES.forEach(d=>{const e=new E(); e.setState(d.id,0);
+  for(let t=0;t<=4;t+=0.05){const p=e.sample(t,{x:.3,y:-.2,w:1});
+    for(const k of Object.keys(p)){ if(k==='d')continue; if(!Number.isFinite(p[k])) fail(d.id+' '+k+' @'+t); }
+    for(const n in p.d){const s=p.d[n]; if(![s.x,s.y,s.s,s.r,s.a].every(Number.isFinite)) fail(d.id+' slot '+n+' @'+t);} }});
+// 2. pure function of time: sampling out of order gives the same pose
+{const e=new E(); e.setState('thinking',1); e.setState('burst',3.1);
+ const a=JSON.stringify(e.sample(3.3)), _=e.sample(9), b=JSON.stringify(e.sample(3.3)); if(a!==b) fail('sample() is not pure');}
+// 3. a change landing inside a fade blends from the frozen frame (no jump)
+{const e=new E(); e.setState('alert',1); const before=e.sample(1.30).dy; e.setState('sleep',1.30); const after=e.sample(1.30).dy;
+ if(Math.abs(before-after)>0.5) fail('jump on interrupted fade '+before+' -> '+after);}
+// 4. the widget: mounts, reacts, like button counts, Moodle hooks fire
+const owl=OwlMascot.mount({size:112,moodle:true});
+let likes=0; owl.like(); likes=owl.box.querySelector('.owl-count').textContent;
+if(likes!=='1') fail('like counter '+likes);
+owl.react('burst'); owl.tour(); owl.state('idle');
+document.querySelector('[data-region=count-container]').textContent='2';
+setTimeout(()=>{
+  out.push('state after notification='+owl.engine.cur.id);
+  if(owl.engine.cur.id!=='notify') fail('notification counter did not trigger notify');
+  const slots=owl.box.querySelectorAll('svg g[opacity]').length; out.push('slots in DOM='+slots);
+  owl.destroy(); if(document.querySelector('.owl-corner')) fail('destroy left DOM behind');
+  document.title=out.length?out.join(' | '):'ALL OK'; document.body.insertAdjacentHTML('beforeend','<pre id=r>'+document.title+'</pre>');
+},400);
+window.onerror=(m)=>{document.title='ERROR '+m};
+</script>

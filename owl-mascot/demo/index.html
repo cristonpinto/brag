@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Owl mascot demo</title>
+<style>
+:root{color-scheme:dark}body{margin:0;background:#16171b;color:#eee;font:15px/1.4 system-ui,sans-serif}
+main{max-width:980px;margin:0 auto;padding:28px 20px;display:grid;grid-template-columns:340px 1fr;gap:32px;align-items:start}
+@media(max-width:760px){main{grid-template-columns:1fr}}
+h1{font-size:20px;margin:0 0 4px}p{margin:0 0 14px;opacity:.75}
+.stage{display:flex;justify-content:center;padding:10px 0}
+.btns{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+button{font:inherit;color:#eee;background:#2a2c33;border:1px solid #3a3d46;border-radius:10px;padding:9px 10px;cursor:pointer}
+button:hover{background:#343741}button:focus-visible{outline:3px solid #edaa25}
+button.on{background:#edaa25;color:#16171b;border-color:#edaa25}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}
+label{display:flex;gap:6px;align-items:center;opacity:.85}
+small{display:block;opacity:.6;margin-top:12px}
+</style>
+<main>
+<div><div class="stage" id="stage"></div>
+<p style="text-align:center">Move the mouse: the eyes follow. Hover, click, double-click it. Leave it alone for a while and it dozes off.</p></div>
+<div><h1>Owl mascot</h1><p>Every state in the catalogue. Pick one to hold it, or "react" to play it once and return to idle.</p>
+<div class="btns" id="btns"></div>
+<div class="row"><button id="react">React once</button><button id="tour">Play full tour</button><button id="like">♥ Like</button>
+<label><input type="checkbox" id="follow" checked> Eyes follow the mouse</label></div>
+<small id="cur"></small></div></main>
+<script src="../dist/owl-mascot.js"></script>
+<script>
+const owl=OwlMascot.create(document.getElementById('stage'),{size:320,shape:'rounded',autoSleep:25});
+const cur=document.getElementById('cur'),btns=document.getElementById('btns');let sel='idle';
+OwlMascot.STATES.forEach(d=>{const b=document.createElement('button');b.textContent=d.id;b.dataset.id=d.id;b.onclick=()=>{sel=d.id;owl.state(d.id);mark()};btns.appendChild(b)});
+function mark(){[...btns.children].forEach(b=>b.classList.toggle('on',b.dataset.id===sel))}
+document.getElementById('react').onclick=()=>owl.react(sel);
+document.getElementById('tour').onclick=()=>owl.tour();
+document.getElementById('like').onclick=()=>owl.react('like');
+document.getElementById('follow').onchange=e=>{location.search=e.target.checked?'':'?nofollow'};
+if(location.search.includes('nofollow')){document.getElementById('follow').checked=false}
+(function tick(){cur.textContent='Current state: '+owl.engine.cur.id;requestAnimationFrame(tick)})();mark();
+</script></html>

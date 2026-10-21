@@ -1,0 +1,34 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Course page (Moodle simulation)</title>
+<body id="page-course-view" class="path-course moodle-simulation">
+<style>body{margin:0;font:15px/1.5 system-ui,sans-serif;background:#f4f5f7;color:#1d2125}
+nav{background:#fff;border-bottom:1px solid #dee2e6;padding:10px 24px;display:flex;justify-content:space-between;align-items:center}
+.popover-region-notifications{position:relative;cursor:pointer;padding:6px 10px;border-radius:8px;background:#eef1f4}
+[data-region="count-container"]{display:inline-block;min-width:20px;text-align:center;background:#c00;color:#fff;border-radius:10px;font-size:12px;margin-left:6px;padding:0 6px}
+main{max-width:860px;margin:24px auto;padding:0 20px}
+.card{background:#fff;border:1px solid #dee2e6;border-radius:12px;padding:18px 22px;margin-bottom:16px}
+.btn{font:inherit;border:1px solid #0f6cbf;background:#0f6cbf;color:#fff;border-radius:8px;padding:7px 14px;cursor:pointer;margin-right:8px}
+.btn-outline-secondary{background:#fff;color:#1d2125;border-color:#adb5bd}.btn-success{background:#357a32;border-color:#357a32;color:#fff}
+.alert{padding:10px 14px;border-radius:8px;margin-top:12px}.alert-success{background:#d7e9d4}.alert-danger{background:#f6d3d0}.alert-warning{background:#f9eac4}
+small{color:#68737d}</style>
+<nav><b>Introduction to Cultural Heritage Law</b><div class="popover-region-notifications">🔔<span data-region="count-container">0</span></div></nav>
+<main>
+<div class="card"><h2 style="margin-top:0">Week 3: Traditional cultural expressions</h2>
+<p>This page imitates the parts of a Moodle page that the mascot listens to. The owl is pinned bottom-right.</p>
+<button class="btn btn-outline-secondary" id="done" data-action="toggle-manual-completion">Mark as done</button>
+<small>→ turns green and the owl celebrates</small></div>
+<div class="card"><h3 style="margin-top:0">Page messages</h3>
+<button class="btn" id="a1">Changes saved</button><button class="btn" id="a2">Validation error</button><button class="btn" id="a3">Deadline warning</button>
+<div id="msgs"></div></div>
+<div class="card"><h3 style="margin-top:0">Notifications</h3>
+<button class="btn" id="n">New notification arrives</button><small>→ the counter goes up and the owl looks at the badge</small></div>
+<div class="card"><h3 style="margin-top:0">Send a form</h3><form onsubmit="return false"><input placeholder="Your answer" style="padding:7px;border-radius:8px;border:1px solid #adb5bd"> <button class="btn" type="submit">Submit</button></form><small>→ the owl looks busy while the page is sending</small></div>
+<div style="height:500px"></div>
+</main>
+<script src="../dist/owl-mascot.js"></script>
+<script>
+const owl=OwlMascot.mount({corner:'bottom-right',size:128,offset:[24,24]});
+const msg=(c,t)=>{const d=document.createElement('div');d.className='alert '+c;d.textContent=t;document.getElementById('msgs').appendChild(d)};
+done.onclick=()=>{const d=done;const on=d.classList.toggle('btn-success');d.classList.toggle('btn-outline-secondary',!on);d.textContent=on?'Done':'Mark as done'};
+a1.onclick=()=>msg('alert-success','Changes saved');a2.onclick=()=>msg('alert-danger','Please fix the highlighted fields');a3.onclick=()=>msg('alert-warning','Deadline is tomorrow');
+let n=0;document.getElementById('n').onclick=()=>{n++;document.querySelector('[data-region=count-container]').textContent=n};
+</script></html>
